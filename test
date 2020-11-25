@@ -1,5 +1,75 @@
 #!ipxe
 
-kernel vmlinuz-3.16.0-rc4 bootfile=https://boot.ipxe.org:443/demo/ fastboot initrd=initrd.img
-initrd initrd.img
-boot
+# Variables are specified in boot.ipxe.cfg
+
+# Some menu defaults
+set menu-timeout 5000
+set submenu-timeout ${menu-timeout}
+isset ${menu-default} || set menu-default exit
+
+# Figure out if client is 64-bit capable
+cpuid --ext 29 && set arch x64 || set arch x86
+cpuid --ext 29 && set archl amd64 || set archl i386
+
+###################### MAIN MENU ####################################
+
+:start
+menu iPXE boot menu for ${initiator-iqn}
+item --gap --             ------------------------- Operating systems ------------------------------
+item --key f freedos      Boot FreeDOS from iSCSI
+item --key m msdos        Boot MS-DOS from iSCSI
+item --key u ubuntu       Boot Ubuntu from iSCSI
+item --key v vmware       Boot VMware ESXi from iSCSI
+item --key w windows7     Boot Windows 7 from iSCSI
+item --key l menu-live    Live environments...
+item --gap --             ------------------------- Tools and utilities ----------------------------
+item --key p pxelinux     Load PXELinux menu
+item --key r menu-recovery Recovery tools...
+item --key d menu-diag    Diagnostics tools...
+item --key i menu-install Installers...
+item --gap --             ------------------------- Advanced options -------------------------------
+item --key c config       Configure settings
+item shell                Drop to iPXE shell
+item reboot               Reboot computer
+item
+item --key x exit         Exit iPXE and continue BIOS boot
+choose --timeout ${menu-timeout} --default ${menu-default} selected || goto cancel
+set menu-timeout 0
+goto ${selected}
+
+:cancel
+echo You cancelled the menu, dropping you to a shell
+
+:shell
+echo Type 'exit' to get the back to the menu
+shell
+set menu-timeout 0
+set submenu-timeout 0
+goto start
+
+:failed
+echo Booting failed, dropping to shell
+goto shell
+
+:reboot
+reboot
+
+:exit
+exit
+
+:config
+config
+goto start
+
+:back
+set submenu-timeout 0
+clear submenu-default
+goto start
+
+############ MAIN MENU ITEMS ############
+
+:freedos
+echo Booting FreeDOS from iSCSI for ${initiator-iqn}
+set root-path ${base-iscsi}:${hostname}.boot.freedos
+sanboot ${root-path} || goto failed
+goto start
