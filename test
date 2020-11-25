@@ -82,13 +82,10 @@ goto start
 
 
 :ubuntu
-echo Booting Ubuntu Focal 1
+echo Booting Ubuntu Focal 2
 set ubuntu_path http://mirror.fairway.ne.jp/ubuntu/dists/focal/main/installer-amd64/current/legacy-images/netboot/ubuntu-installer/amd64
 imgfree
 kernel ${ubuntu_path}/linux -- initrd=initrd.gz 
 initrd ${ubuntu_path}/initrd.gz
-echo
-echo MD5sums:
-md5sum linux initrd.gz
 boot
 goto start
