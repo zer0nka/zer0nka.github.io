@@ -73,3 +73,9 @@ echo Booting FreeDOS from iSCSI for ${initiator-iqn}
 set root-path ${base-iscsi}:${hostname}.boot.freedos
 sanboot ${root-path} || goto failed
 goto start
+
+:ubuntu
+echo Booting Ubuntu Focal
+initrd http://archive.ubuntu.com/ubuntu/dists/focal-updates/main/installer-amd64/current/legacy-images/netboot/mini.iso
+boot
+goto start
