@@ -5,7 +5,7 @@
 # Some menu defaults
 set menu-timeout 5000
 set submenu-timeout ${menu-timeout}
-isset ${menu-default} || set menu-default exit
+isset ${menu-default} || set menu-default ubuntu
 
 # Figure out if client is 64-bit capable
 cpuid --ext 29 && set arch x64 || set arch x86
