@@ -74,8 +74,21 @@ set root-path ${base-iscsi}:${hostname}.boot.freedos
 sanboot ${root-path} || goto failed
 goto start
 
-:ubuntu
+:ubuntu1
 echo Booting Ubuntu Focal
 initrd http://archive.ubuntu.com/ubuntu/dists/focal-updates/main/installer-amd64/current/legacy-images/netboot/mini.iso
 chain memdisk iso raw
+goto start
+
+
+:ubuntu
+echo Booting Ubuntu Focal 1
+set ubuntu_path http://mirror.fairway.ne.jp/ubuntu/dists/focal/main/installer-amd64/current/legacy-images/netboot/ubuntu-installer/amd64
+imgfree
+kernel ${ubuntu_path}/linux -- initrd=initrd.gz 
+initrd ${ubuntu_path}/initrd.gz
+echo
+echo MD5sums:
+md5sum linux initrd.gz
+boot
 goto start
