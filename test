@@ -76,5 +76,5 @@ goto start
 
 :ubuntu
 echo Booting Ubuntu Focal
-chain http://archive.ubuntu.com/ubuntu/dists/focal-updates/main/installer-amd64/current/legacy-images/netboot/mini.iso
+chain http://archive.ubuntu.com/ubuntu/dists/focal-updates/main/installer-amd64/current/legacy-images/netboot/mini.iso iso raw
 goto start
